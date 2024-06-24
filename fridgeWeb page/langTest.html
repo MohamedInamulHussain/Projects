@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translate to Tamil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+        body {
+            top: 0px !important;
+        }
+        .goog-te-gadget-icon {
+            display: none !important;
+        }
+        .goog-te-gadget-simple {
+            border: none !important;
+            background-color: transparent !important;
+        }
+        #toggle {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            display: flex;
+            align-items: center;
+        }
+        #toggle h6 {
+            margin-top: 5px;
+            font-weight: 600;
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="toggle">
+        <label class="switch">
+            <input type="checkbox" id="languageToggle">
+            <span class="slider round"></span>
+        </label>
+        <h6>தமிழ் - ENG</h6>
+    </div>
+
+    <h1 id="title">Hello, World!</h1>
+    <p id="content">This is a sample paragraph. Click the button below to translate it to Tamil.</p>
+
+    <div id="google_translate_element" style="display: none;"></div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,ta',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+
+        document.getElementById('languageToggle').addEventListener('change', function() {
+            const googleTranslateElement = document.getElementById('google_translate_element');
+            const translateSelect = googleTranslateElement.querySelector('.goog-te-combo');
+
+            if (translateSelect) {
+                const language = this.checked ? 'ta' : 'en';
+                translateSelect.value = language;
+                translateSelect.dispatchEvent(new Event('change'));
+            }
+        });
+
+        window.onload = function() {
+            // Initialize Google Translate widget
+            googleTranslateElementInit();
+
+            // Automatically set the default language to English on page load
+            const googleTranslateElement = document.getElementById('google_translate_element');
+            const translateSelect = googleTranslateElement.querySelector('.goog-te-combo');
+
+            if (translateSelect) {
+                translateSelect.value = 'en';
+                translateSelect.dispatchEvent(new Event('change'));
+            }
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
