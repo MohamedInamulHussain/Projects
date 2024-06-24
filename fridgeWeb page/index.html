@@ -93,6 +93,20 @@
         .button:hover, .counter-button:hover {
             background-color: #218838;
         }
+        .getFoodBtn{
+            font-size: 15px;
+            font-weight: 600;
+            background-color: #28a745;
+            color: white;
+            /* padding: 10px 20px; */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 140px;
+           position: relative;
+           left:0px;
+        }
         #getFoodBtn{
             font-size: 15px;
             font-weight: 600;
@@ -262,13 +276,11 @@
                     <label class="switch">
                         <input type="checkbox">
                         <span class="slider round"></span>
-                        
                     </label>
                     <h6>தமிழ்  -  ENG</h6>
                 </div>
                 <!-- Volunteer button and load food section -->
                 <button class="btn" onclick="showLoadFood()">Load Food <span style="font-size: 25px; position: absolute; top: 3px;">&#11166;</span></button>
-                
             </nav>
             <h1 id="title">COMMUNITY FRIDGE</h1>
             <h4 id="subTitle">From our community, for our community</h4>
@@ -284,7 +296,6 @@
             <button onclick="getFood()" id="getFoodBtn">Get Food</button>
             <!-- Option buttons -->
             <div class="optionMenu">
-
                 <button class="button2" onclick="showCheckFood()"><img src="./icons/Food_Search.png" style="height: 80%; transform: scale(0.7);margin-top: -10px;"><label>Food Details</label> </button>
                 <button class="button2" onclick="showRequestFood()"><img src="./icons/request.png" style="height: 80%; transform: scale(0.7);margin-top: -10px;"><label>Request Food</label></button>
             </div>
@@ -299,6 +310,12 @@
                     <input type="text" id="food-id-check">
                 </div>
                 <button class="button" onclick="checkFoodDetails()">Check</button>
+                <div id="food-details" class="hidden">
+                    <h3>Food Details</h3>
+                    <p id="food-name-display"></p>
+                    <p id="cooked-timing-display"></p>
+                    <p id="expiry-timing-display"></p>
+                </div>
             </div>
             <div id="request-food-section" class="hidden">
                 <div class="input-group">
@@ -317,11 +334,31 @@
                 <button class="button" onclick="requestFood()">Request</button>
             </div>
             <div id="load-food-section" class="hidden">
-                <div class="input-group">
-                    <label for="food-id-load">Enter Food ID:</label>
-                    <input type="text" id="food-id-load">
+                <H6>Note: Please SELECT Individual option if you are directly donating food without MEALY  APP</H6>
+                <button class="getFoodBtn" id="individualLoadBtn" onclick="showIndividualLoad()">Individual</button>
+                <button class="getFoodBtn" id="volunteerLoadBtn" onclick="showVolunteerLoad()">Volunteer</button>
+                <div id="individual-load-section" class="hidden">
+                    <div class="input-group">
+                        <label for="food-name">Food Name:</label>
+                        <input type="text" id="food-name">
+                    </div>
+                    <div class="input-group">
+                        <label for="cooked-timing">Cooked Timing:</label>
+                        <input type="text" id="cooked-timing">
+                    </div>
+                    <div class="input-group">
+                        <label for="expiry-timing">Expiry Timing:</label>
+                        <input type="text" id="expiry-timing">
+                    </div>
+                    <button class="button" onclick="loadIndividualFood()">Load</button>
                 </div>
-                <button class="button" onclick="loadFood()">Load</button>
+                <div id="volunteer-load-section" class="hidden">
+                    <div class="input-group">
+                        <label for="food-id-load">Enter Food ID:</label>
+                        <input type="text" id="food-id-load">
+                    </div>
+                    <button class="button" onclick="loadVolunteerFood()">Load</button>
+                </div>
             </div>
         </div>
     </div>
@@ -346,6 +383,24 @@
             document.getElementById('load-food-section').style.display = 'block';
             document.getElementById('request-food-section').style.display = 'none';
             document.getElementById('check-food-section').style.display = 'none';
+            document.getElementById('individual-load-section').style.display = 'none';
+            document.getElementById('volunteer-load-section').style.display = 'none';
+            document.getElementById('individualLoadBtn').style.display = 'block';
+            document.getElementById('volunteerLoadBtn').style.display = 'block';
+        }
+
+        function showIndividualLoad() {
+            document.getElementById('individual-load-section').style.display = 'block';
+            document.getElementById('volunteer-load-section').style.display = 'none';
+            document.getElementById('individualLoadBtn').style.display = 'none';
+            document.getElementById('volunteerLoadBtn').style.display = 'none';
+        }
+
+        function showVolunteerLoad() {
+            document.getElementById('volunteer-load-section').style.display = 'block';
+            document.getElementById('individual-load-section').style.display = 'none';
+            document.getElementById('individualLoadBtn').style.display = 'none';
+            document.getElementById('volunteerLoadBtn').style.display = 'none';
         }
 
         function closeCard() {
@@ -353,6 +408,11 @@
             document.getElementById('check-food-section').style.display = 'none';
             document.getElementById('request-food-section').style.display = 'none';
             document.getElementById('load-food-section').style.display = 'none';
+            document.getElementById('individual-load-section').style.display = 'none';
+            document.getElementById('volunteer-load-section').style.display = 'none';
+            document.getElementById('food-details').style.display = 'none';
+            document.getElementById('individualLoadBtn').style.display = 'block';
+            document.getElementById('volunteerLoadBtn').style.display = 'block';
         }
 
         let foodCount = 1;
@@ -375,17 +435,32 @@
 
         function checkFoodDetails() {
             const foodId = document.getElementById('food-id-check').value;
-            alert(`Checking details for Food ID: ${foodId}`);
+            const sampleFoodDetails = {
+                foodName: 'Vegetable Curry',
+                cookedTiming: 'Today, 10:00 AM',
+                expiryTiming: 'Tomorrow, 10:00 AM'
+            };
+
+            document.getElementById('food-name-display').innerText = `Food Name: ${sampleFoodDetails.foodName}`;
+            document.getElementById('cooked-timing-display').innerText = `Cooked Timing: ${sampleFoodDetails.cookedTiming}`;
+            document.getElementById('expiry-timing-display').innerText = `Expiry Timing: ${sampleFoodDetails.expiryTiming}`;
+            document.getElementById('food-details').style.display = 'block';
         }
 
         function requestFood() {
-            const foodId = document.getElementById('food-id-request').value;
-            alert(`Requesting Food with ID: ${foodId}`);
+            alert('Food request sent. Volunteers will restock the fridge soon.');
         }
 
-        function loadFood() {
+        function loadIndividualFood() {
+            const foodName = document.getElementById('food-name').value;
+            const cookedTiming = document.getElementById('cooked-timing').value;
+            const expiryTiming = document.getElementById('expiry-timing').value;
+            alert(`Food Name: ${foodName}\nCooked Timing: ${cookedTiming}\nExpiry Timing: ${expiryTiming}\nThis is your Food id:\nWrite this id in your food Package\nKeep your food in the fridge.`);
+        }
+
+        function loadVolunteerFood() {
             const foodId = document.getElementById('food-id-load').value;
-            alert(`Loading Food with ID: ${foodId}`);
+            alert(`Loading Food with ID: ${foodId}\nKeep your food in the fridge.`);
         }
     </script>
 </body>
